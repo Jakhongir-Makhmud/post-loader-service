@@ -1,0 +1,16 @@
+{
+    "app": {
+        "name":"post_loader_service",
+        "port": ":9001",
+        "database": {
+            "username": "postgres",
+            "password": "1",
+            "host": "localhost",
+            "port": "5432",
+            "dbname": "postdb"
+        },
+        "log": {
+            "level": "development"
+        }
+    }
+}
