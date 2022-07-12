@@ -1,9 +1,9 @@
-package post_repo
+package post_loader_repo
 
 import (
 	"context"
-	"post-service/internal/structs"
-	"post-service/pkg/logger"
+	"post-loader-service/internal/structs"
+	"post-loader-service/pkg/logger"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -17,7 +17,7 @@ type repo struct {
 	logger logger.Logger
 }
 
-func NewPostRepo(db *sqlx.DB, logger logger.Logger) PostLoaderRepo {
+func NewPosLoadertRepo(db *sqlx.DB, logger logger.Logger) PostLoaderRepo {
 	return &repo{
 		db:     db,
 		logger: logger,

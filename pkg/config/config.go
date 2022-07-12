@@ -10,6 +10,7 @@ import (
 type Config interface {
 	GetString(string) string
 	GetInt(string) int
+	GetDuration(key string) time.Duration
 }
 
 type config struct {
@@ -22,7 +23,9 @@ func NewConfig() Config {
 	cfg.SetConfigName("config")
 	cfg.SetConfigType("json")
 	cfg.AddConfigPath("./config")
-
+	if err := cfg.ReadInConfig(); err != nil {
+		panic(err)
+	}
 	cfg.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 	cfg.AutomaticEnv()
 

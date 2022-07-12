@@ -1,8 +1,8 @@
-package post_repo
+package post_loader_repo
 
 import (
 	"context"
-	"post-service/internal/structs"
+	"post-loader-service/internal/structs"
 
 	"go.uber.org/zap"
 )

@@ -2,7 +2,7 @@ package db
 
 import (
 	"fmt"
-	"post-service/pkg/config"
+	"post-loader-service/pkg/config"
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"

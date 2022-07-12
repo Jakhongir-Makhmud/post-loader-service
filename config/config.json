@@ -11,6 +11,16 @@
         },
         "log": {
             "level": "development"
+        },
+        "cache": {
+            "expiration": 10
+        },
+        "postSource":{
+            "url": "https://gorest.co.in/public/v1/posts"
+        },
+        "workerPool":{
+            "maxWorkers": 20,
+            "queueSize": 50
         }
     }
 }
