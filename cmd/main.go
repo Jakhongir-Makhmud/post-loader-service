@@ -21,7 +21,7 @@ func main() {
 	cfg := config.NewConfig()
 
 	dbConn, logger := db.NewDB(cfg), logger.New(cfg.GetString("app.log.level"), cfg.GetString("app.name"))
-	
+
 	cache := cache.NewCache(cfg)
 
 	postLoaderRepo := postLoaderRepo.NewPosLoadertRepo(dbConn, logger)

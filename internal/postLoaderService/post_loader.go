@@ -11,6 +11,7 @@ import (
 )
 
 const pagesDoneKey = "pagesDone"
+
 // Warning max number of pages which has in requesting service not taken into account
 func (s *service) LoadPosts(ctx context.Context, params *pbl.LoadPostParam) (*pbl.LoadingStatus, error) {
 	var processingPages, lastProcessedPages int64
@@ -32,8 +33,8 @@ func (s *service) LoadPosts(ctx context.Context, params *pbl.LoadPostParam) (*pb
 
 	s.cache.Set(proccessId, &pbl.LoadingStatus{ProcessId: proccessId, WorkOfDone: 0, Status: "on process", TotalWork: params.Pages})
 
-	jobs := make([]func(), 0,params.Pages)
-	// ex: lastProcessedPages was 50, so we load posts till 50, next time we want load next 30 pages from 50 till 80, 
+	jobs := make([]func(), 0, params.Pages)
+	// ex: lastProcessedPages was 50, so we load posts till 50, next time we want load next 30 pages from 50 till 80,
 	// we add last and current and got 80 (50 + 30).
 	s.logger.Debug("pages", zap.Int64("lastpages:", lastProcessedPages), zap.Int64("current pages", processingPages))
 	for i := lastProcessedPages; i < processingPages; i++ {
