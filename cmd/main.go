@@ -20,10 +20,11 @@ func main() {
 
 	cfg := config.NewConfig()
 
-	db, logger := db.NewDB(cfg), logger.New(cfg.GetString("app.log.level"), cfg.GetString("app.name"))
+	dbConn, logger := db.NewDB(cfg), logger.New(cfg.GetString("app.log.level"), cfg.GetString("app.name"))
+	
 	cache := cache.NewCache(cfg)
 
-	postLoaderRepo := postLoaderRepo.NewPosLoadertRepo(db, logger)
+	postLoaderRepo := postLoaderRepo.NewPosLoadertRepo(dbConn, logger)
 
 	postSource := postSource.NewPostSource(cfg, logger)
 	// max number of workers is small because of requesting server seems don't support cocurrent request, so by this we can load posts without any errors.
@@ -47,7 +48,7 @@ func main() {
 	pbl.RegisterPostLoaderServiceServer(s, service)
 	reflection.Register(s)
 
-	logger.Info("service has started it's job")
+	logger.Info("service has started it's job on port: " + cfg.GetString("app.port"))
 
 	panic(s.Serve(listener))
 }

@@ -3,11 +3,11 @@
         "name":"post_loader_service",
         "port": ":9001",
         "database": {
-            "username": "jakhongir",
-            "password": "1",
+            "username": "postgres",
+            "password": "",
             "host": "localhost",
             "port": "5432",
-            "dbname": "postdb"
+            "dbname": "postgres"
         },
         "log": {
             "level": "development"
