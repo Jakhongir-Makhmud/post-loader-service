@@ -1,6 +1,7 @@
 package config
 
 import (
+	"runtime"
 	"strings"
 	"time"
 
@@ -22,7 +23,7 @@ func NewConfig() Config {
 	cfg := viper.New()
 	cfg.SetConfigName("config")
 	cfg.SetConfigType("json")
-	cfg.AddConfigPath("./config")
+	cfg.AddConfigPath(RootDir() + "/config")
 	if err := cfg.ReadInConfig(); err != nil {
 		panic(err)
 	}
@@ -44,4 +45,10 @@ func (c *config) GetInt(key string) int {
 
 func (c *config) GetDuration(key string) time.Duration {
 	return c.cfg.GetDuration(key)
+}
+
+func RootDir() string {
+	_, b, _, _ := runtime.Caller(0)
+	sp := strings.Split(b, "post-service")
+	return sp[0] + "/post-service/"
 }
