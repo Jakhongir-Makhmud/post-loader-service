@@ -57,7 +57,7 @@ func main() {
 	reflection.Register(s)
 
 	go func() {
-		<-shutDownCh
+		<-shutDownCh // it will wait until signal is received
 		s.GracefulStop() // stop server gracefully, stop accepting requests
 		cancel()         // to stop workers
 		logger.Info("service shuted down gracefully")
