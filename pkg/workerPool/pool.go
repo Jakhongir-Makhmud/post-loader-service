@@ -28,18 +28,26 @@ func (p *pool) Run(ctxFinish context.Context) {
 	go func() {
 		select {
 		case <-ctxFinish.Done():
-			close(p.queue) // if chanel closed workers will exit.
+			close(p.queue)
 			fmt.Println("workers are done treir job.")
 		}
 	}()
 
 	for i := 1; i <= p.maxWokers; i++ {
 
-		go func() {
-			for job := range p.queue {
-				job()
+		go func(i int) {
+
+			for {
+				select {
+				case job := <-p.queue:
+					job()
+				case <-ctxFinish.Done():
+					fmt.Printf("worker %d is terminated \n", i)
+					return
+				}
 			}
-		}()
+
+		}(i)
 
 	}
 
