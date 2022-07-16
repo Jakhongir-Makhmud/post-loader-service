@@ -1,7 +1,10 @@
 package main
 
 import (
+	"context"
 	"net"
+	"os"
+	"os/signal"
 	pbl "post-loader-service/genproto/post_loader_service" // protobuffer post loader service
 	postLoaderService "post-loader-service/internal/postLoaderService"
 	"post-loader-service/pkg/cache"
@@ -12,11 +15,15 @@ import (
 	"post-loader-service/pkg/workerPool"
 	postLoaderRepo "post-loader-service/repo"
 
+	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
 
 func main() {
+	ctx, cancel := context.WithCancel(context.Background())
+	shutDownCh := make(chan os.Signal, 1)
+	signal.Notify(shutDownCh, os.Interrupt)
 
 	cfg := config.NewConfig()
 
@@ -38,7 +45,8 @@ func main() {
 		PostSource:     postSource,
 	}
 	service := postLoaderService.NewPostLoaderService(params)
-	go pool.Run()
+	go pool.Run(ctx)
+
 	listener, err := net.Listen("tcp", cfg.GetString("app.port"))
 	if err != nil {
 		panic(err)
@@ -48,7 +56,18 @@ func main() {
 	pbl.RegisterPostLoaderServiceServer(s, service)
 	reflection.Register(s)
 
+	go func() {
+		<-shutDownCh
+		s.GracefulStop() // stop server gracefully, stop accepting requests
+		cancel()         // to stop workers
+		logger.Info("service shuted down gracefully")
+	}()
 	logger.Info("service has started it's job on port: " + cfg.GetString("app.port"))
 
-	panic(s.Serve(listener))
+	err = s.Serve(listener)
+	if err == nil {
+		logger.Warn("server is stoped", zap.Error(err))
+	} else {
+		panic(err)
+	}
 }

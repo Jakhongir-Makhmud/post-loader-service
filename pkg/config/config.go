@@ -49,6 +49,6 @@ func (c *config) GetDuration(key string) time.Duration {
 
 func RootDir() string {
 	_, b, _, _ := runtime.Caller(0)
-	sp := strings.Split(b, "post-service")
-	return sp[0] + "/post-service/"
+	sp := strings.Split(b, "post-loader-service")
+	return sp[0] + "/post-loader-service/"
 }
